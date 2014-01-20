@@ -20,30 +20,40 @@
 
 $wgExtensionFunctions[] = "wfWikiScript";
 
-function wfWikiScript() {
-    global $wgParser;
-    # registers the <wikiscript> extension with the WikiText parser
-    $wgParser->setHook( "wikiscript", "renderWikiScript" );
+function wfWikiScript()
+{
+	global $wgParser;
+	# registers the <wikiscript> extension with the WikiText parser
+	$wgParser->setHook("wikiscript", "renderWikiScript");
 }
 
 # The callback function for converting the input text to HTML output
-function renderWikiScript( $input, $argv ) {
-    $output = '<script ';
-    if( $argv["src"] ) { $output .= 'src="'.$argv["src"].'" '; }
-    if( $argv["language"] )
-    {
-        $output .= 'language="'.$argv["language"].'" ';
-    }
-    else
-    {
-        $output .= 'language="javascript" ';
-    }
-    $type=$argv["type"];
-    if( !$type ) { $type = "text/javascript"; }
-    $output .= 'type="'.$type.'" ';
-    $output .= '>';
-    $output .= $input;
-    $output .= '</script>';
-    return $output;
+function renderWikiScript($input, $argv)
+{
+	$output = '<script ';
+
+	if (isset($argv['src']) and $argv['src']) {
+		$output .= "src=\"{$argv['src']}\" ";
+	}
+
+	if (isset($argv['language']) and $argv['language']) {
+		$output .= "language=\"{$argv['language']}\" ";
+	} else {
+		$output .= 'language="javascript" ';
+	}
+
+	if (isset($argv['type']) and $argv["type"]) {
+		$type = $argv['type'];
+	} else {
+		$type = 'text/javascript';
+	}
+
+	$output .= "type=\"$type\" ";
+	$output .= '>';
+	$output .= $input;
+	$output .= '</script>';
+
+	return $output;
 }
+
 ?>
